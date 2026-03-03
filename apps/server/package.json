@@ -1,25 +1,31 @@
 {
-  "name": "@repo/server",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "lint": "eslint src/",
-    "clean": "rm -rf dist"
-  },
-  "dependencies": {
-    "@repo/utils": "workspace:*",
-    "express": "^4.21.2"
-  },
-  "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.10.2",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
-  }
+    "name": "@repo/server",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "tsc",
+        "clean": "rm -rf dist",
+        "dev": "tsx watch src/index.ts",
+        "lint": "eslint src/",
+        "start": "node dist/index.js"
+    },
+    "dependencies": {
+        "@repo/errors": "workspace:*",
+        "@repo/models": "workspace:*",
+        "@repo/utils": "workspace:*",
+        "ai": "^4.0.38",
+        "cors": "^2.8.5",
+        "express": "^4.21.2",
+        "express-rate-limit": "^7.5.0"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "@types/cors": "^2.8.17",
+        "@types/express": "^5.0.0",
+        "@types/node": "^22.10.2",
+        "tsx": "^4.19.2",
+        "typescript": "^5.7.2"
+    }
 }
