@@ -1,0 +1,22 @@
+{
+  "name": "recruiting_bot",
+  "version": "1.0.0",
+  "description": "AI-powered recruiting chatbot monorepo",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "turbo": "^2.6.1"
+  },
+  "packageManager": "pnpm@10.5.0",
+  "engines": {
+    "node": ">=18"
+  }
+}
