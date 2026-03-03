@@ -12,6 +12,7 @@ out/
 .env
 .env.local
 .env.*.local
+.env.keys
 
 # Logs
 logs/
@@ -31,12 +32,19 @@ pnpm-debug.log*
 # OS
 .DS_Store
 Thumbs.db
+*.pem
 
 # Turborepo
 .turbo/
 
 # Testing
 coverage/
+lcov.info
+
+# Foundry
+contracts/out
+contracts/cache
 
 # Misc
 *.tsbuildinfo
+.tmp
