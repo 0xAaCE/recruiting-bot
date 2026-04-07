@@ -48,3 +48,7 @@ contracts/cache
 # Misc
 *.tsbuildinfo
 .tmp
+
+# Agents
+.agents/
+.claude/
