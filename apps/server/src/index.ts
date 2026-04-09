@@ -6,6 +6,7 @@ import { env } from "./config/env.js";
 import { authMiddleware } from "./middleware/auth.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { chatLimiter, globalLimiter } from "./middleware/rateLimiter.js";
+import { requestLogger } from "./middleware/requestLogger.js";
 import authRouter from "./routes/auth.js";
 import chatRouter from "./routes/chat.js";
 
@@ -14,6 +15,7 @@ const app = express();
 // --- Global middleware ---
 app.use(express.json({ limit: "35mb" }));
 app.use(cors({ origin: true, credentials: true }));
+app.use(requestLogger);
 app.use(globalLimiter);
 
 // --- Public routes (no auth) ---

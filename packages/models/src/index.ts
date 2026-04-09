@@ -1,9 +1,9 @@
 // Export main chat functions
-export { generateChatResponse, streamChatResponse } from './lib/chat';
-export type { ChatMessage, ChatOptions } from './lib/chat';
+export { streamChatResponse } from "./lib/chat";
+export type { ChatMessage, ChatOptions } from "./lib/chat";
 
 // Export tools
-export { recruiterTools, saveCandidateTool } from './actions';
+export { recruiterTools, saveCandidateTool } from "./actions";
 
 // Export prompts
-export { RECRUITING_BOT_SYSTEM_PROMPT } from './prompts/base';
+export { RECRUITING_BOT_SYSTEM_PROMPT } from "./prompts/base";

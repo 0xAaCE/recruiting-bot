@@ -1,31 +1,32 @@
 {
-  "name": "@repo/models",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+    "name": "@repo/models",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "clean": "rm -rf dist",
+        "dev": "tsc --watch",
+        "lint": "eslint src/"
+    },
+    "dependencies": {
+        "@ai-sdk/openai": "^1.0.10",
+        "@openrouter/ai-sdk-provider": "0.7.5",
+        "@repo/utils": "workspace:*",
+        "ai": "^4.0.38",
+        "zod": "^3.23.8"
+    },
+    "devDependencies": {
+        "@repo/eslint-config": "workspace:*",
+        "@repo/typescript-config": "workspace:*",
+        "typescript": "^5.7.2"
     }
-  },
-  "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
-    "lint": "eslint src/",
-    "clean": "rm -rf dist"
-  },
-  "dependencies": {
-    "@repo/utils": "workspace:*",
-    "ai": "^4.0.38",
-    "@ai-sdk/openai": "^1.0.10",
-    "zod": "^3.23.8"
-  },
-  "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
-    "typescript": "^5.7.2"
-  }
 }

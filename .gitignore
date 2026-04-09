@@ -39,6 +39,7 @@ Thumbs.db
 
 # Testing
 coverage/
+test-data/
 lcov.info
 
 # Foundry

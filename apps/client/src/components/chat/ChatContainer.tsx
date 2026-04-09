@@ -111,7 +111,7 @@ export function ChatContainer() {
 
             {error && (
                 <div className="mx-4 mb-2 rounded-lg bg-red-50 px-4 py-2 text-sm text-red-700">
-                    Something went wrong. Please try again.
+                    {error.message || "Something went wrong. Please try again."}
                 </div>
             )}
 

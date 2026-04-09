@@ -1,3 +1,7 @@
+import dotenv from "dotenv";
+
+dotenv.config({ path: new URL("../../.env.local", import.meta.url).pathname });
+
 function requireEnv(name: string): string {
     const value = process.env[name];
     if (!value) {
@@ -7,7 +11,7 @@ function requireEnv(name: string): string {
 }
 
 export const env = {
-    openaiApiKey: requireEnv("OPENAI_API_KEY"),
+    openRouterApiKey: requireEnv("OPENROUTER_API_KEY"),
     demoPassword: requireEnv("DEMO_PASSWORD"),
     port: parseInt(process.env.PORT || "3001", 10),
 };
