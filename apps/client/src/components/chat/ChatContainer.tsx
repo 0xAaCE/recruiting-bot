@@ -1,4 +1,4 @@
-import type { CandidateEvaluation, FileRecord } from "@/types/chat";
+import type { CandidateEvaluation, FilePurpose, FileRecord, JobDescription } from "@/types/chat";
 import type { Attachment, UIMessage } from "ai";
 import type React from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
@@ -10,6 +10,8 @@ import { FileUploadArea } from "./FileUploadArea";
 import { MessageList } from "./MessageList";
 
 export const INJECTED_CV_MESSAGE = "Please evaluate the attached CV.";
+export const INJECTED_JD_MESSAGE =
+    "Please review the attached job description PDF and use it as the job requirements for evaluating candidates.";
 
 function fileToDataUrl(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -45,16 +47,43 @@ function extractEvaluation(result: unknown): CandidateEvaluation | null {
     };
 }
 
+function extractJobDescription(result: unknown): JobDescription | null {
+    const r = result as {
+        success?: boolean;
+        title?: string;
+        company?: string;
+        summary?: string;
+        requirements?: string[];
+        niceToHave?: string[];
+        techStack?: string[];
+    };
+
+    if (!r?.success || !r.title) return null;
+
+    return {
+        title: r.title,
+        company: r.company ?? "",
+        summary: r.summary ?? "",
+        requirements: r.requirements ?? [],
+        niceToHave: r.niceToHave ?? [],
+        techStack: r.techStack ?? [],
+    };
+}
+
 interface ChatContainerProps {
     evaluations: CandidateEvaluation[];
     setEvaluations: React.Dispatch<React.SetStateAction<CandidateEvaluation[]>>;
+    setJobDescription: React.Dispatch<React.SetStateAction<JobDescription | null>>;
 }
 
-export function ChatContainer({ setEvaluations }: ChatContainerProps) {
+export function ChatContainer({ setEvaluations, setJobDescription }: ChatContainerProps) {
     const [savedMessages, setSavedMessages] = useLocalStorage<UIMessage[]>("messages", []);
     const [fileRecords, setFileRecords] = useLocalStorage<FileRecord[]>("file_records", []);
 
     const [stagedFiles, setStagedFiles] = useState<File[]>([]);
+    const [filePurpose, setFilePurpose] = useState<FilePurpose>("resume");
+
+    const hasJobDescription = fileRecords.some((r) => r.purpose === "job_description");
 
     const { messages, input, handleInputChange, handleSubmit, append, status, error } = useChat({
         api: "/api/chat",
@@ -66,11 +95,11 @@ export function ChatContainer({ setEvaluations }: ChatContainerProps) {
         experimental_throttle: 50,
         onFinish: (message) => {
             for (const part of message.parts ?? []) {
-                if (
-                    part.type === "tool-invocation" &&
-                    part.toolInvocation.toolName === "saveCandidate" &&
-                    part.toolInvocation.state === "result"
-                ) {
+                if (part.type !== "tool-invocation" || part.toolInvocation.state !== "result") {
+                    continue;
+                }
+
+                if (part.toolInvocation.toolName === "saveCandidate") {
                     const evaluation = extractEvaluation(part.toolInvocation.result);
                     if (evaluation) {
                         setEvaluations((prev) => {
@@ -79,6 +108,13 @@ export function ChatContainer({ setEvaluations }: ChatContainerProps) {
                             }
                             return [...prev, evaluation];
                         });
+                    }
+                }
+
+                if (part.toolInvocation.toolName === "saveJobDescription") {
+                    const jd = extractJobDescription(part.toolInvocation.result);
+                    if (jd) {
+                        setJobDescription(jd);
                     }
                 }
             }
@@ -107,14 +143,18 @@ export function ChatContainer({ setEvaluations }: ChatContainerProps) {
                 size: f.size,
                 timestamp: Date.now(),
                 type: f.type,
+                purpose: filePurpose,
             }));
             setFileRecords((prev) => [...prev, ...newRecords]);
             setStagedFiles([]);
+            setFilePurpose("resume");
 
             if (input.trim().length === 0) {
+                const defaultMessage =
+                    filePurpose === "job_description" ? INJECTED_JD_MESSAGE : INJECTED_CV_MESSAGE;
                 append({
                     role: "user",
-                    content: INJECTED_CV_MESSAGE,
+                    content: defaultMessage,
                     experimental_attachments: attachments,
                 });
             } else {
@@ -140,6 +180,9 @@ export function ChatContainer({ setEvaluations }: ChatContainerProps) {
                     <FileUploadArea
                         files={stagedFiles}
                         fileRecords={fileRecords}
+                        purpose={filePurpose}
+                        onPurposeChange={setFilePurpose}
+                        hasJobDescription={hasJobDescription}
                         onFilesSelected={(files) => setStagedFiles((prev) => [...prev, ...files])}
                         onRemoveFile={(index) =>
                             setStagedFiles((prev) => prev.filter((_, i) => i !== index))
@@ -152,6 +195,7 @@ export function ChatContainer({ setEvaluations }: ChatContainerProps) {
                         onSubmit={handleSubmitWithFiles}
                         isLoading={status !== "ready"}
                         hasFiles={stagedFiles.length > 0}
+                        filePurpose={stagedFiles.length > 0 ? filePurpose : undefined}
                     />
                 </div>
             </div>

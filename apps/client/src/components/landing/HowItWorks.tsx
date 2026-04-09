@@ -12,7 +12,7 @@ const steps: Step[] = [
         icon: ClipboardList,
         title: "Describe the Job",
         description:
-            "Paste or type the job description. The AI will ask clarifying questions to understand your priorities.",
+            "Paste, type, or upload the job description as a PDF. The AI will ask clarifying questions to understand your priorities.",
     },
     {
         icon: FileUp,

@@ -1,11 +1,14 @@
-import type { FileRecord } from "@/types/chat";
+import type { FilePurpose, FileRecord } from "@/types/chat";
 import { MAX_FILE_SIZE, MAX_FILES } from "@/lib/constants";
-import { FileText, Paperclip, X } from "lucide-react";
+import { ClipboardList, FileText, Paperclip, X } from "lucide-react";
 import { useRef, useState } from "react";
 
 interface FileUploadAreaProps {
     files: File[];
     fileRecords: FileRecord[];
+    purpose: FilePurpose;
+    onPurposeChange: (purpose: FilePurpose) => void;
+    hasJobDescription: boolean;
     onFilesSelected: (files: File[]) => void;
     onRemoveFile: (index: number) => void;
     disabled: boolean;
@@ -20,12 +23,14 @@ function formatSize(bytes: number): string {
 export function FileUploadArea({
     files,
     fileRecords,
+    purpose,
+    onPurposeChange,
+    hasJobDescription,
     onFilesSelected,
     onRemoveFile,
     disabled,
 }: FileUploadAreaProps) {
     const inputRef = useRef<HTMLInputElement>(null);
-    const [isDragging, setIsDragging] = useState(false);
     const [error, setError] = useState("");
 
     const totalFiles = fileRecords.length + files.length;
@@ -47,6 +52,11 @@ export function FileUploadArea({
             valid.push(file);
         }
 
+        if (purpose === "job_description" && valid.length > 1) {
+            setError("Only one job description PDF can be uploaded.");
+            return valid.slice(0, 1);
+        }
+
         if (valid.length > remainingSlots) {
             setError(`You can upload up to ${MAX_FILES} files per session.`);
             return valid.slice(0, Math.max(0, remainingSlots));
@@ -62,28 +72,17 @@ export function FileUploadArea({
         }
     }
 
-    function handleDrop(e: React.DragEvent) {
-        e.preventDefault();
-        setIsDragging(false);
-        if (disabled) return;
-        handleFiles(Array.from(e.dataTransfer.files));
-    }
-
-    function handleDragOver(e: React.DragEvent) {
-        e.preventDefault();
-        if (!disabled) setIsDragging(true);
-    }
-
-    function handleDragLeave(e: React.DragEvent) {
-        e.preventDefault();
-        setIsDragging(false);
-    }
-
     function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files) {
             handleFiles(Array.from(e.target.files));
             e.target.value = "";
         }
+    }
+
+    function openPicker(filePurpose: FilePurpose) {
+        onPurposeChange(filePurpose);
+        // Defer click so the purpose state is set before validation runs
+        setTimeout(() => inputRef.current?.click(), 0);
     }
 
     return (
@@ -92,31 +91,37 @@ export function FileUploadArea({
                 ref={inputRef}
                 type="file"
                 accept=".pdf,application/pdf"
-                multiple
+                multiple={purpose !== "job_description"}
                 className="hidden"
                 onChange={handleInputChange}
             />
 
-            {/* Drop zone / button */}
-            <div
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                className={`rounded-lg border border-dashed p-3 text-center transition-colors ${
-                    isDragging
-                        ? "border-indigo-400 bg-indigo-50"
-                        : "border-slate-300 hover:border-slate-400"
-                } ${disabled ? "pointer-events-none opacity-50" : "cursor-pointer"}`}
-                onClick={() => inputRef.current?.click()}
-            >
-                <div className="flex items-center justify-center gap-2 text-sm text-slate-500">
+            {/* Two buttons side by side */}
+            <div className="flex gap-2">
+                <button
+                    type="button"
+                    disabled={disabled || remainingSlots <= 0}
+                    onClick={() => openPicker("resume")}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 p-3 text-sm text-slate-500 transition-colors hover:border-slate-400 hover:text-slate-600 disabled:pointer-events-none disabled:opacity-50"
+                >
                     <Paperclip className="h-4 w-4" />
                     <span>
-                        {isDragging
-                            ? "Drop PDFs here"
-                            : `Attach PDF resumes${remainingSlots < MAX_FILES ? ` (${remainingSlots} remaining)` : ""}`}
+                        Attach Resumes
+                        {remainingSlots < MAX_FILES ? ` (${remainingSlots} remaining)` : ""}
                     </span>
-                </div>
+                </button>
+
+                <button
+                    type="button"
+                    disabled={disabled || hasJobDescription}
+                    onClick={() => openPicker("job_description")}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 p-3 text-sm text-slate-500 transition-colors hover:border-slate-400 hover:text-slate-600 disabled:pointer-events-none disabled:opacity-50"
+                >
+                    <ClipboardList className="h-4 w-4" />
+                    <span>
+                        {hasJobDescription ? "Job Description Uploaded" : "Attach Job Description"}
+                    </span>
+                </button>
             </div>
 
             {/* Error */}
@@ -132,6 +137,9 @@ export function FileUploadArea({
                         >
                             <FileText className="h-4 w-4 text-slate-400" />
                             <span className="flex-1 truncate text-slate-700">{file.name}</span>
+                            <span className="rounded bg-slate-200 px-1.5 py-0.5 text-xs text-slate-500">
+                                {purpose === "job_description" ? "JD" : "Resume"}
+                            </span>
                             <span className="text-xs text-slate-400">{formatSize(file.size)}</span>
                             <button
                                 type="button"

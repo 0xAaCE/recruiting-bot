@@ -1,4 +1,4 @@
-import type { CandidateEvaluation } from "@/types/chat";
+import type { CandidateEvaluation, JobDescription } from "@/types/chat";
 import { CandidateSidebar } from "@/components/chat/CandidateSidebar";
 import { ChatContainer } from "@/components/chat/ChatContainer";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
@@ -9,6 +9,10 @@ import { useState } from "react";
 export function ChatPage() {
     const [resetKey, setResetKey] = useState(0);
     const [evaluations, setEvaluations] = useLocalStorage<CandidateEvaluation[]>("evaluations", []);
+    const [jobDescription, setJobDescription] = useLocalStorage<JobDescription | null>(
+        "job_description",
+        null,
+    );
 
     function handleNewSearch() {
         if (
@@ -16,6 +20,7 @@ export function ChatPage() {
         ) {
             clearAll();
             setEvaluations([]);
+            setJobDescription(null);
             setResetKey((prev) => prev + 1);
         }
     }
@@ -42,6 +47,7 @@ export function ChatPage() {
                         key={resetKey}
                         evaluations={evaluations}
                         setEvaluations={setEvaluations}
+                        setJobDescription={setJobDescription}
                     />
                 </div>
                 <CandidateSidebar evaluations={evaluations} />

@@ -1,3 +1,4 @@
+import type { FilePurpose } from "@/types/chat";
 import { SendHorizontal } from "lucide-react";
 import { useRef } from "react";
 
@@ -7,9 +8,17 @@ interface ChatInputProps {
     onSubmit: (e?: { preventDefault?: () => void }) => void;
     isLoading: boolean;
     hasFiles: boolean;
+    filePurpose?: FilePurpose;
 }
 
-export function ChatInput({ input, onInputChange, onSubmit, isLoading, hasFiles }: ChatInputProps) {
+export function ChatInput({
+    input,
+    onInputChange,
+    onSubmit,
+    isLoading,
+    hasFiles,
+    filePurpose,
+}: ChatInputProps) {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const canSubmit = input.trim().length > 0 || hasFiles;
 
@@ -48,7 +57,13 @@ export function ChatInput({ input, onInputChange, onSubmit, isLoading, hasFiles 
                 onChange={onInputChange}
                 onKeyDown={handleKeyDown}
                 onInput={handleInput}
-                placeholder="Describe the role or ask a question..."
+                placeholder={
+                    filePurpose === "job_description"
+                        ? "Add notes about this job description (optional)..."
+                        : filePurpose === "resume"
+                          ? "Add context for these resumes (optional)..."
+                          : "Describe the role or ask a question..."
+                }
                 rows={1}
                 disabled={isLoading}
                 className="max-h-[150px] min-h-[44px] flex-1 resize-none overflow-y-auto rounded-lg border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:opacity-50"
