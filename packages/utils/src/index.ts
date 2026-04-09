@@ -1,2 +1,2 @@
-export { logger, createLogger } from './logger';
-export type { Logger } from 'pino';
+export { logger, createLogger } from "./logger.js";
+export type { Logger } from "pino";

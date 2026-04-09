@@ -1,8 +1,8 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { streamText } from "ai";
 
-import { recruiterTools } from "../actions";
-import { RECRUITING_BOT_SYSTEM_PROMPT } from "../prompts/base";
+import { recruiterTools } from "../actions/index.js";
+import { RECRUITING_BOT_SYSTEM_PROMPT } from "../prompts/base.js";
 
 export interface ChatMessage {
     role: "user" | "assistant" | "system";
