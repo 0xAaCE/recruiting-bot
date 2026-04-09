@@ -25,7 +25,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=pruner /app/out/json/ .
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
 
 # Copy compiled outputs
 COPY --from=builder /app/apps/server/dist/ ./apps/server/dist/
