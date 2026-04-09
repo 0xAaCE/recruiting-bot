@@ -1,5 +1,6 @@
 import type { CandidateEvaluation, JobDescription } from "@/types/chat";
-import type { UIMessage } from "ai";
+import type { UIMessage } from "@ai-sdk/react";
+import { getToolName, isFileUIPart, isToolUIPart } from "ai";
 import {
     BrainCircuit,
     CheckCircle2,
@@ -136,6 +137,8 @@ function JobDescriptionCard({ jd }: { jd: JobDescription }) {
 
 export function MessageBubble({ message }: MessageBubbleProps) {
     const isUser = message.role === "user";
+    const fileParts = message.parts.filter(isFileUIPart);
+    const hasFiles = fileParts.length > 0;
 
     return (
         <div className={`flex gap-3 ${isUser ? "flex-row-reverse" : ""}`}>
@@ -152,29 +155,28 @@ export function MessageBubble({ message }: MessageBubbleProps) {
             </div>
 
             <div className={`max-w-[80%] space-y-2 ${isUser ? "text-right" : ""}`}>
-                {isUser &&
-                    message.experimental_attachments &&
-                    message.experimental_attachments.length > 0 && (
-                        <div className={`flex flex-wrap gap-1.5 ${isUser ? "justify-end" : ""}`}>
-                            {message.experimental_attachments.map((att, i) => (
-                                <span
-                                    key={i}
-                                    className="inline-flex items-center gap-1 rounded-lg bg-indigo-500/80 px-2.5 py-1 text-xs text-white/90"
-                                >
-                                    <Paperclip className="h-3 w-3" />
-                                    <span className="max-w-[150px] truncate">{att.name}</span>
+                {isUser && hasFiles && (
+                    <div className={`flex flex-wrap gap-1.5 ${isUser ? "justify-end" : ""}`}>
+                        {fileParts.map((part, i) => (
+                            <span
+                                key={i}
+                                className="inline-flex items-center gap-1 rounded-lg bg-indigo-500/80 px-2.5 py-1 text-xs text-white/90"
+                            >
+                                <Paperclip className="h-3 w-3" />
+                                <span className="max-w-[150px] truncate">
+                                    {part.filename ?? "File"}
                                 </span>
-                            ))}
-                        </div>
-                    )}
+                            </span>
+                        ))}
+                    </div>
+                )}
                 {message.parts.map((part, i) => {
                     if (part.type === "text") {
                         const isHiddenPlaceholder =
                             isUser &&
                             (part.text === INJECTED_CV_MESSAGE ||
                                 part.text === INJECTED_JD_MESSAGE) &&
-                            message.experimental_attachments &&
-                            message.experimental_attachments.length > 0;
+                            hasFiles;
                         if (part.text.length === 0 || isHiddenPlaceholder) return null;
                         return isUser ? (
                             <div
@@ -193,12 +195,12 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                         );
                     }
 
-                    if (part.type === "tool-invocation") {
-                        const { toolInvocation } = part;
+                    if (isToolUIPart(part)) {
+                        const toolName = getToolName(part);
 
-                        if (toolInvocation.toolName === "saveCandidate") {
-                            if (toolInvocation.state === "result") {
-                                const evaluation = extractEvaluation(toolInvocation.result);
+                        if (toolName === "saveCandidate") {
+                            if (part.state === "output-available") {
+                                const evaluation = extractEvaluation(part.output);
                                 if (evaluation) {
                                     return <CandidateCard key={i} evaluation={evaluation} />;
                                 }
@@ -214,9 +216,9 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                             );
                         }
 
-                        if (toolInvocation.toolName === "saveJobDescription") {
-                            if (toolInvocation.state === "result") {
-                                const jd = extractJobDescription(toolInvocation.result);
+                        if (toolName === "saveJobDescription") {
+                            if (part.state === "output-available") {
+                                const jd = extractJobDescription(part.output);
                                 if (jd) {
                                     return <JobDescriptionCard key={i} jd={jd} />;
                                 }

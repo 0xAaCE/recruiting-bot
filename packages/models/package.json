@@ -18,10 +18,10 @@
         "lint": "eslint src/"
     },
     "dependencies": {
-        "@ai-sdk/openai": "^1.0.10",
-        "@openrouter/ai-sdk-provider": "0.7.5",
+        "@ai-sdk/openai": "^3.0.51",
+        "@openrouter/ai-sdk-provider": "^2.3.3",
         "@repo/utils": "workspace:*",
-        "ai": "^4.0.38",
+        "ai": "^6.0.154",
         "zod": "^3.23.8"
     },
     "devDependencies": {

@@ -1,4 +1,4 @@
-import type { UIMessage } from "ai";
+import type { UIMessage } from "@ai-sdk/react";
 import { BrainCircuit, MessageSquare } from "lucide-react";
 import { useEffect, useRef } from "react";
 

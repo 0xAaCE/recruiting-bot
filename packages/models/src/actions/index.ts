@@ -8,7 +8,7 @@ const logger = createLogger({ module: "actions" });
 export const saveCandidateTool = tool({
     description:
         "Save candidate information and evaluation after analyzing their resume against the job description",
-    parameters: z.object({
+    inputSchema: z.object({
         name: z.string().describe("Candidate full name"),
         email: z.string().email().describe("Candidate email address"),
         evaluation: z
@@ -38,7 +38,7 @@ export const saveCandidateTool = tool({
 export const saveJobDescriptionTool = tool({
     description:
         "Save a structured summary of the job description after analyzing a job description PDF or text",
-    parameters: z.object({
+    inputSchema: z.object({
         title: z.string().describe("Job title"),
         company: z.string().describe("Company name"),
         summary: z.string().describe("Brief 1-2 sentence summary of the role"),

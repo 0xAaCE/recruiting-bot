@@ -1,10 +1,12 @@
 import type { CandidateEvaluation, FilePurpose, FileRecord, JobDescription } from "@/types/chat";
-import type { Attachment, UIMessage } from "ai";
+import type { UIMessage } from "@ai-sdk/react";
+import type { FileUIPart } from "ai";
 import type React from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { API_BASE_URL } from "@/lib/constants";
-import { useChat } from "ai/react";
-import { useEffect, useState } from "react";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport, getToolName, isToolUIPart } from "ai";
+import { useEffect, useMemo, useState } from "react";
 
 import { ChatInput } from "./ChatInput";
 import { FileUploadArea } from "./FileUploadArea";
@@ -88,26 +90,43 @@ export function ChatContainer({
 
     const [stagedFiles, setStagedFiles] = useState<File[]>([]);
     const [filePurpose, setFilePurpose] = useState<FilePurpose>("resume");
+    const [input, setInput] = useState("");
 
     const hasJobDescription =
         jobDescription !== null || fileRecords.some((r) => r.purpose === "job_description");
 
-    const { messages, input, handleInputChange, handleSubmit, append, status, error } = useChat({
-        api: `${API_BASE_URL}/api/chat`,
-        headers: {
-            "x-demo-password": sessionStorage.getItem("recruitai_demo_password") ?? "",
-        },
-        initialMessages: savedMessages,
-        maxSteps: 6,
-        experimental_throttle: 50,
-        onFinish: (message) => {
-            for (const part of message.parts ?? []) {
-                if (part.type !== "tool-invocation" || part.toolInvocation.state !== "result") {
-                    continue;
-                }
+    useEffect(() => {
+        const version = localStorage.getItem("recruitai_msg_version");
+        if (version !== "2") {
+            localStorage.removeItem("messages");
+            localStorage.setItem("recruitai_msg_version", "2");
+            window.location.reload();
+        }
+    }, []);
 
-                if (part.toolInvocation.toolName === "saveCandidate") {
-                    const evaluation = extractEvaluation(part.toolInvocation.result);
+    const transport = useMemo(
+        () =>
+            new DefaultChatTransport({
+                api: `${API_BASE_URL}/api/chat`,
+                headers: () => ({
+                    "x-demo-password": sessionStorage.getItem("recruitai_demo_password") ?? "",
+                }),
+            }),
+        [],
+    );
+
+    const { messages, sendMessage, status, error } = useChat({
+        transport,
+        messages: savedMessages,
+        experimental_throttle: 50,
+        onFinish: ({ message }) => {
+            for (const part of message.parts) {
+                if (!isToolUIPart(part) || part.state !== "output-available") continue;
+
+                const toolName = getToolName(part);
+
+                if (toolName === "saveCandidate") {
+                    const evaluation = extractEvaluation(part.output);
                     if (evaluation) {
                         setEvaluations((prev) => {
                             if (prev.some((e) => e.candidateId === evaluation.candidateId)) {
@@ -118,8 +137,8 @@ export function ChatContainer({
                     }
                 }
 
-                if (part.toolInvocation.toolName === "saveJobDescription") {
-                    const jd = extractJobDescription(part.toolInvocation.result);
+                if (toolName === "saveJobDescription") {
+                    const jd = extractJobDescription(part.output);
                     if (jd) {
                         setJobDescription(jd);
                     }
@@ -135,12 +154,19 @@ export function ChatContainer({
         }
     }, [messages, setSavedMessages]);
 
+    function handleInputChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+        setInput(e.target.value);
+    }
+
     async function handleSubmitWithFiles(e?: { preventDefault?: () => void }) {
+        e?.preventDefault?.();
+
         if (stagedFiles.length > 0) {
-            const attachments: Attachment[] = await Promise.all(
+            const files: FileUIPart[] = await Promise.all(
                 stagedFiles.map(async (file) => ({
-                    name: file.name,
-                    contentType: file.type,
+                    type: "file" as const,
+                    mediaType: file.type,
+                    filename: file.name,
                     url: await fileToDataUrl(file),
                 })),
             );
@@ -156,20 +182,19 @@ export function ChatContainer({
             setStagedFiles([]);
             setFilePurpose("resume");
 
-            if (input.trim().length === 0) {
-                const defaultMessage =
-                    filePurpose === "job_description" ? INJECTED_JD_MESSAGE : INJECTED_CV_MESSAGE;
-                append({
-                    role: "user",
-                    content: defaultMessage,
-                    experimental_attachments: attachments,
-                });
-            } else {
-                handleSubmit(e, { experimental_attachments: attachments });
-            }
-        } else {
-            handleSubmit(e);
+            const text =
+                input.trim().length === 0
+                    ? filePurpose === "job_description"
+                        ? INJECTED_JD_MESSAGE
+                        : INJECTED_CV_MESSAGE
+                    : input;
+
+            await sendMessage({ text, files });
+        } else if (input.trim().length > 0) {
+            await sendMessage({ text: input });
         }
+
+        setInput("");
     }
 
     return (
