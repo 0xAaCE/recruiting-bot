@@ -74,17 +74,23 @@ function extractJobDescription(result: unknown): JobDescription | null {
 interface ChatContainerProps {
     evaluations: CandidateEvaluation[];
     setEvaluations: React.Dispatch<React.SetStateAction<CandidateEvaluation[]>>;
+    jobDescription: JobDescription | null;
     setJobDescription: React.Dispatch<React.SetStateAction<JobDescription | null>>;
 }
 
-export function ChatContainer({ setEvaluations, setJobDescription }: ChatContainerProps) {
+export function ChatContainer({
+    jobDescription,
+    setEvaluations,
+    setJobDescription,
+}: ChatContainerProps) {
     const [savedMessages, setSavedMessages] = useLocalStorage<UIMessage[]>("messages", []);
     const [fileRecords, setFileRecords] = useLocalStorage<FileRecord[]>("file_records", []);
 
     const [stagedFiles, setStagedFiles] = useState<File[]>([]);
     const [filePurpose, setFilePurpose] = useState<FilePurpose>("resume");
 
-    const hasJobDescription = fileRecords.some((r) => r.purpose === "job_description");
+    const hasJobDescription =
+        jobDescription !== null || fileRecords.some((r) => r.purpose === "job_description");
 
     const { messages, input, handleInputChange, handleSubmit, append, status, error } = useChat({
         api: `${API_BASE_URL}/api/chat`,
@@ -92,7 +98,7 @@ export function ChatContainer({ setEvaluations, setJobDescription }: ChatContain
             "x-demo-password": sessionStorage.getItem("recruitai_demo_password") ?? "",
         },
         initialMessages: savedMessages,
-        maxSteps: 2,
+        maxSteps: 6,
         experimental_throttle: 50,
         onFinish: (message) => {
             for (const part of message.parts ?? []) {

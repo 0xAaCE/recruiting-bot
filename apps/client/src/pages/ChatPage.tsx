@@ -47,6 +47,7 @@ export function ChatPage() {
                         key={resetKey}
                         evaluations={evaluations}
                         setEvaluations={setEvaluations}
+                        jobDescription={jobDescription}
                         setJobDescription={setJobDescription}
                     />
                 </div>

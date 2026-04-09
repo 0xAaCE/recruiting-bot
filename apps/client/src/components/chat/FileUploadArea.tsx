@@ -100,14 +100,18 @@ export function FileUploadArea({
             <div className="flex gap-2">
                 <button
                     type="button"
-                    disabled={disabled || remainingSlots <= 0}
+                    disabled={disabled || remainingSlots <= 0 || !hasJobDescription}
                     onClick={() => openPicker("resume")}
+                    title={
+                        !hasJobDescription ? "Please provide a job description first" : undefined
+                    }
                     className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 p-3 text-sm text-slate-500 transition-colors hover:border-slate-400 hover:text-slate-600 disabled:pointer-events-none disabled:opacity-50"
                 >
                     <Paperclip className="h-4 w-4" />
                     <span>
-                        Attach Resumes
-                        {remainingSlots < MAX_FILES ? ` (${remainingSlots} remaining)` : ""}
+                        {!hasJobDescription
+                            ? "Provide a Job Description first"
+                            : `Attach Resumes${remainingSlots < MAX_FILES ? ` (${remainingSlots} remaining)` : ""}`}
                     </span>
                 </button>
 
