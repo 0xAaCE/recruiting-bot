@@ -29,3 +29,13 @@ export function removeItem(key: string): void {
         // localStorage may be unavailable
     }
 }
+
+export function clearAll(): void {
+    try {
+        const prefix = `${STORAGE_PREFIX}v${STORAGE_VERSION}_`;
+        const keys = Object.keys(localStorage).filter((k) => k.startsWith(prefix));
+        keys.forEach((k) => localStorage.removeItem(k));
+    } catch {
+        // localStorage may be unavailable
+    }
+}
