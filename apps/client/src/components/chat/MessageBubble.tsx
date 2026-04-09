@@ -1,9 +1,10 @@
 import type { CandidateEvaluation } from "@/types/chat";
 import type { UIMessage } from "ai";
-import { BrainCircuit, Loader2, User } from "lucide-react";
+import { BrainCircuit, Loader2, Paperclip, User } from "lucide-react";
 import Markdown from "react-markdown";
 
 import { CandidateCard } from "./CandidateCard";
+import { INJECTED_CV_MESSAGE } from "./ChatContainer";
 
 interface MessageBubbleProps {
     message: UIMessage;
@@ -52,9 +53,29 @@ export function MessageBubble({ message }: MessageBubbleProps) {
             </div>
 
             <div className={`max-w-[80%] space-y-2 ${isUser ? "text-right" : ""}`}>
+                {isUser &&
+                    message.experimental_attachments &&
+                    message.experimental_attachments.length > 0 && (
+                        <div className={`flex flex-wrap gap-1.5 ${isUser ? "justify-end" : ""}`}>
+                            {message.experimental_attachments.map((att, i) => (
+                                <span
+                                    key={i}
+                                    className="inline-flex items-center gap-1 rounded-lg bg-indigo-500/80 px-2.5 py-1 text-xs text-white/90"
+                                >
+                                    <Paperclip className="h-3 w-3" />
+                                    <span className="max-w-[150px] truncate">{att.name}</span>
+                                </span>
+                            ))}
+                        </div>
+                    )}
                 {message.parts.map((part, i) => {
                     if (part.type === "text") {
-                        if (part.text.length === 0) return null;
+                        const isHiddenPlaceholder =
+                            isUser &&
+                            part.text === INJECTED_CV_MESSAGE &&
+                            message.experimental_attachments &&
+                            message.experimental_attachments.length > 0;
+                        if (part.text.length === 0 || isHiddenPlaceholder) return null;
                         return isUser ? (
                             <div
                                 key={i}

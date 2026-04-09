@@ -1,16 +1,21 @@
+import type { CandidateEvaluation } from "@/types/chat";
+import { CandidateSidebar } from "@/components/chat/CandidateSidebar";
 import { ChatContainer } from "@/components/chat/ChatContainer";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { clearAll } from "@/lib/storage";
 import { BrainCircuit, RotateCcw } from "lucide-react";
 import { useState } from "react";
 
 export function ChatPage() {
     const [resetKey, setResetKey] = useState(0);
+    const [evaluations, setEvaluations] = useLocalStorage<CandidateEvaluation[]>("evaluations", []);
 
     function handleNewSearch() {
         if (
             window.confirm("Start a new search? This will clear all chat history and evaluations.")
         ) {
             clearAll();
+            setEvaluations([]);
             setResetKey((prev) => prev + 1);
         }
     }
@@ -31,8 +36,15 @@ export function ChatPage() {
                 </button>
             </header>
 
-            <main className="flex-1 overflow-hidden">
-                <ChatContainer key={resetKey} />
+            <main className="flex flex-1 overflow-hidden">
+                <div className="flex-1 overflow-hidden">
+                    <ChatContainer
+                        key={resetKey}
+                        evaluations={evaluations}
+                        setEvaluations={setEvaluations}
+                    />
+                </div>
+                <CandidateSidebar evaluations={evaluations} />
             </main>
         </div>
     );

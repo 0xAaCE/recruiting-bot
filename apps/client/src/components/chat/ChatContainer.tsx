@@ -1,5 +1,6 @@
 import type { CandidateEvaluation, FileRecord } from "@/types/chat";
 import type { Attachment, UIMessage } from "ai";
+import type React from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useChat } from "ai/react";
 import { useEffect, useState } from "react";
@@ -7,6 +8,8 @@ import { useEffect, useState } from "react";
 import { ChatInput } from "./ChatInput";
 import { FileUploadArea } from "./FileUploadArea";
 import { MessageList } from "./MessageList";
+
+export const INJECTED_CV_MESSAGE = "Please evaluate the attached CV.";
 
 function fileToDataUrl(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -42,14 +45,18 @@ function extractEvaluation(result: unknown): CandidateEvaluation | null {
     };
 }
 
-export function ChatContainer() {
+interface ChatContainerProps {
+    evaluations: CandidateEvaluation[];
+    setEvaluations: React.Dispatch<React.SetStateAction<CandidateEvaluation[]>>;
+}
+
+export function ChatContainer({ setEvaluations }: ChatContainerProps) {
     const [savedMessages, setSavedMessages] = useLocalStorage<UIMessage[]>("messages", []);
-    const [, setEvaluations] = useLocalStorage<CandidateEvaluation[]>("evaluations", []);
     const [fileRecords, setFileRecords] = useLocalStorage<FileRecord[]>("file_records", []);
 
     const [stagedFiles, setStagedFiles] = useState<File[]>([]);
 
-    const { messages, input, handleInputChange, handleSubmit, status, error } = useChat({
+    const { messages, input, handleInputChange, handleSubmit, append, status, error } = useChat({
         api: "/api/chat",
         headers: {
             "x-demo-password": sessionStorage.getItem("recruitai_demo_password") ?? "",
@@ -66,7 +73,12 @@ export function ChatContainer() {
                 ) {
                     const evaluation = extractEvaluation(part.toolInvocation.result);
                     if (evaluation) {
-                        setEvaluations((prev) => [...prev, evaluation]);
+                        setEvaluations((prev) => {
+                            if (prev.some((e) => e.candidateId === evaluation.candidateId)) {
+                                return prev;
+                            }
+                            return [...prev, evaluation];
+                        });
                     }
                 }
             }
@@ -99,7 +111,15 @@ export function ChatContainer() {
             setFileRecords((prev) => [...prev, ...newRecords]);
             setStagedFiles([]);
 
-            handleSubmit(e, { experimental_attachments: attachments });
+            if (input.trim().length === 0) {
+                append({
+                    role: "user",
+                    content: INJECTED_CV_MESSAGE,
+                    experimental_attachments: attachments,
+                });
+            } else {
+                handleSubmit(e, { experimental_attachments: attachments });
+            }
         } else {
             handleSubmit(e);
         }
@@ -131,6 +151,7 @@ export function ChatContainer() {
                         onInputChange={handleInputChange}
                         onSubmit={handleSubmitWithFiles}
                         isLoading={status !== "ready"}
+                        hasFiles={stagedFiles.length > 0}
                     />
                 </div>
             </div>

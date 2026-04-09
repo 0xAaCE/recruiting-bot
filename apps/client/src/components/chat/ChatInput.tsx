@@ -6,15 +6,17 @@ interface ChatInputProps {
     onInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
     onSubmit: (e?: { preventDefault?: () => void }) => void;
     isLoading: boolean;
+    hasFiles: boolean;
 }
 
-export function ChatInput({ input, onInputChange, onSubmit, isLoading }: ChatInputProps) {
+export function ChatInput({ input, onInputChange, onSubmit, isLoading, hasFiles }: ChatInputProps) {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const canSubmit = input.trim().length > 0 || hasFiles;
 
     function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            if (input.trim().length > 0 && !isLoading) {
+            if (canSubmit && !isLoading) {
                 onSubmit();
             }
         }
@@ -30,7 +32,7 @@ export function ChatInput({ input, onInputChange, onSubmit, isLoading }: ChatInp
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        if (input.trim().length > 0 && !isLoading) {
+        if (canSubmit && !isLoading) {
             onSubmit();
             if (textareaRef.current) {
                 textareaRef.current.style.height = "auto";
@@ -53,7 +55,7 @@ export function ChatInput({ input, onInputChange, onSubmit, isLoading }: ChatInp
             />
             <button
                 type="submit"
-                disabled={isLoading || input.trim().length === 0}
+                disabled={isLoading || !canSubmit}
                 className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-lg bg-indigo-600 text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
                 <SendHorizontal className="h-4 w-4" />
