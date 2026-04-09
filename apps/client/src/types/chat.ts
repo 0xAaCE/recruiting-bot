@@ -23,9 +23,21 @@ export interface CandidateEvaluation {
     summary: string;
 }
 
+export interface JobDescription {
+    title: string;
+    company: string;
+    summary: string;
+    requirements: string[];
+    niceToHave: string[];
+    techStack: string[];
+}
+
+export type FilePurpose = "resume" | "job_description";
+
 export interface FileRecord {
     name: string;
     size: number;
     timestamp: number;
     type: string;
+    purpose?: FilePurpose;
 }

@@ -35,6 +35,32 @@ export const saveCandidateTool = tool({
     },
 });
 
+export const saveJobDescriptionTool = tool({
+    description:
+        "Save a structured summary of the job description after analyzing a job description PDF or text",
+    parameters: z.object({
+        title: z.string().describe("Job title"),
+        company: z.string().describe("Company name"),
+        summary: z.string().describe("Brief 1-2 sentence summary of the role"),
+        requirements: z.array(z.string()).describe("Must-have requirements"),
+        niceToHave: z.array(z.string()).describe("Nice-to-have requirements"),
+        techStack: z.array(z.string()).describe("Technologies and tools mentioned"),
+    }),
+    execute: async ({ title, company, summary, requirements, niceToHave, techStack }) => {
+        logger.info({ title, company }, "Saving job description");
+        return {
+            success: true,
+            title,
+            company,
+            summary,
+            requirements,
+            niceToHave,
+            techStack,
+        };
+    },
+});
+
 export const recruiterTools = {
     saveCandidate: saveCandidateTool,
+    saveJobDescription: saveJobDescriptionTool,
 };
