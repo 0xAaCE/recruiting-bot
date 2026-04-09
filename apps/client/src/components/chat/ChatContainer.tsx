@@ -2,6 +2,7 @@ import type { CandidateEvaluation, FilePurpose, FileRecord, JobDescription } fro
 import type { Attachment, UIMessage } from "ai";
 import type React from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { API_BASE_URL } from "@/lib/constants";
 import { useChat } from "ai/react";
 import { useEffect, useState } from "react";
 
@@ -86,7 +87,7 @@ export function ChatContainer({ setEvaluations, setJobDescription }: ChatContain
     const hasJobDescription = fileRecords.some((r) => r.purpose === "job_description");
 
     const { messages, input, handleInputChange, handleSubmit, append, status, error } = useChat({
-        api: "/api/chat",
+        api: `${API_BASE_URL}/api/chat`,
         headers: {
             "x-demo-password": sessionStorage.getItem("recruitai_demo_password") ?? "",
         },

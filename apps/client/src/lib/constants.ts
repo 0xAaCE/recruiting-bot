@@ -1,5 +1,5 @@
-/** Base URL for API requests. Empty because Vite's dev proxy handles /api -> localhost:3001 */
-export const API_BASE_URL = "";
+/** Base URL for API requests. Empty in dev (Vite proxy), set via VITE_API_BASE_URL in production. */
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
 /** Prefix for all localStorage keys */
 export const STORAGE_PREFIX = "recruitai_";
