@@ -28,7 +28,7 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: 0xaace/recruiting-bot-server
+                  images: xaace/recruiting-bot-server
                   tags: |
                       type=sha,prefix=
                       type=ref,event=branch
