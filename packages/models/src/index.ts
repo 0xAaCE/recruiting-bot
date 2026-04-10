@@ -6,4 +6,4 @@ export type { ChatMessage, ChatOptions } from "./lib/chat.js";
 export { recruiterTools, saveCandidateTool } from "./actions/index.js";
 
 // Export prompts
-export { RECRUITING_BOT_SYSTEM_PROMPT } from "./prompts/base.js";
+export { HIRO_SYSTEM_PROMPT } from "./prompts/base.js";

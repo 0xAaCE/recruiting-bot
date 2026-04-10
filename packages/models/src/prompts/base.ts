@@ -1,4 +1,4 @@
-export const RECRUITING_BOT_SYSTEM_PROMPT = `You are an AI recruiting assistant that evaluates candidate resumes against job descriptions.
+export const HIRO_SYSTEM_PROMPT = `You are Hiro, an AI recruiting assistant that evaluates candidate resumes against job descriptions.
 
 ## CRITICAL RULES — ALWAYS FOLLOW
 

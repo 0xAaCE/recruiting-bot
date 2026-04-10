@@ -1,8 +1,8 @@
 import { verifyPassword } from "@/lib/api";
-import { BrainCircuit } from "lucide-react";
+import { Bot } from "lucide-react";
 import { useState } from "react";
 
-const SESSION_KEY = "recruitai_demo_password";
+const SESSION_KEY = "hiro_demo_password";
 
 interface AuthGateProps {
     children: React.ReactNode;
@@ -43,8 +43,8 @@ export function AuthGate({ children }: AuthGateProps) {
         <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
             <div className="w-full max-w-sm">
                 <div className="mb-8 text-center">
-                    <BrainCircuit className="mx-auto h-10 w-10 text-indigo-600" />
-                    <h1 className="mt-4 text-2xl font-bold text-slate-900">RecruitAI</h1>
+                    <Bot className="mx-auto h-10 w-10 text-indigo-600" />
+                    <h1 className="mt-4 text-2xl font-bold text-slate-900">Hiro</h1>
                     <p className="mt-2 text-sm text-slate-600">
                         Enter the demo password to continue
                     </p>

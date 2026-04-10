@@ -3,7 +3,7 @@ import { CandidateSidebar } from "@/components/chat/CandidateSidebar";
 import { ChatContainer } from "@/components/chat/ChatContainer";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { clearAll } from "@/lib/storage";
-import { BrainCircuit, RotateCcw } from "lucide-react";
+import { Bot, RotateCcw } from "lucide-react";
 import { useState } from "react";
 
 export function ChatPage() {
@@ -29,8 +29,8 @@ export function ChatPage() {
         <div className="flex h-screen flex-col bg-slate-50">
             <header className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3">
                 <div className="flex items-center gap-2">
-                    <BrainCircuit className="h-5 w-5 text-indigo-600" />
-                    <span className="text-base font-semibold text-slate-900">RecruitAI</span>
+                    <Bot className="h-5 w-5 text-indigo-600" />
+                    <span className="text-base font-semibold text-slate-900">Hiro</span>
                     <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium leading-none text-amber-700">
                         Demo
                     </span>

@@ -2,7 +2,7 @@ import type { CandidateEvaluation, JobDescription } from "@/types/chat";
 import type { UIMessage } from "@ai-sdk/react";
 import { getToolName, isFileUIPart, isToolUIPart } from "ai";
 import {
-    BrainCircuit,
+    Bot,
     CheckCircle2,
     ClipboardList,
     Code2,
@@ -150,7 +150,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
                 {isUser ? (
                     <User className="h-4 w-4 text-indigo-600" />
                 ) : (
-                    <BrainCircuit className="h-4 w-4 text-slate-600" />
+                    <Bot className="h-4 w-4 text-slate-600" />
                 )}
             </div>
 

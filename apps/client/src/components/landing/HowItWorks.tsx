@@ -10,21 +10,21 @@ interface Step {
 const steps: Step[] = [
     {
         icon: MessageSquare,
-        title: "Start a Conversation",
+        title: "Tell Hiro About the Role",
         description:
-            "Tell RecruitAI about the role you're hiring for. It asks the right questions to understand your requirements, team, and priorities.",
+            "Describe the position you're hiring for, or upload a job description. Hiro asks the right questions to understand your requirements, team, and priorities.",
     },
     {
         icon: FileSearch,
-        title: "Screen Candidates",
+        title: "Upload Resumes",
         description:
-            "Upload resumes as PDFs. AI reads them natively and returns structured scorecards with fit scores, strengths, and clear recommendations.",
+            "Drop in candidate CVs as PDFs. Hiro reads them and returns structured scorecards with fit scores, strengths, and clear recommendations.",
     },
     {
         icon: TrendingUp,
         title: "Hire with Confidence",
         description:
-            "Compare candidates side by side, track progress through your pipeline, and make data-driven hiring decisions — all in chat.",
+            "Compare candidates side by side, track your pipeline, and make data-driven hiring decisions — all through a conversation with Hiro.",
     },
 ];
 
@@ -32,7 +32,7 @@ export function HowItWorks() {
     return (
         <section className="bg-slate-50 px-4 py-20 sm:px-6">
             <div className="mx-auto max-w-6xl">
-                <h2 className="text-center text-3xl font-bold text-slate-900">How It Works</h2>
+                <h2 className="text-center text-3xl font-bold text-slate-900">How Hiro Works</h2>
 
                 <div className="mt-14 grid gap-8 sm:grid-cols-3">
                     {steps.map((step, i) => (

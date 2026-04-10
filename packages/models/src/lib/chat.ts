@@ -3,7 +3,7 @@ import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { convertToModelMessages, streamText } from "ai";
 
 import { recruiterTools } from "../actions/index.js";
-import { RECRUITING_BOT_SYSTEM_PROMPT } from "../prompts/base.js";
+import { HIRO_SYSTEM_PROMPT } from "../prompts/base.js";
 
 export type ChatMessage = UIMessage;
 
@@ -38,7 +38,7 @@ export async function streamChatResponse(
 
     const result = streamText({
         model: openrouter(config.model!),
-        system: RECRUITING_BOT_SYSTEM_PROMPT,
+        system: HIRO_SYSTEM_PROMPT,
         messages: modelMessages,
         tools: recruiterTools,
         temperature: config.temperature,

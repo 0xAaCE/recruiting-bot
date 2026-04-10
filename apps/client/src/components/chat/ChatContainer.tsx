@@ -96,10 +96,10 @@ export function ChatContainer({
         jobDescription !== null || fileRecords.some((r) => r.purpose === "job_description");
 
     useEffect(() => {
-        const version = localStorage.getItem("recruitai_msg_version");
+        const version = localStorage.getItem("hiro_msg_version");
         if (version !== "2") {
             localStorage.removeItem("messages");
-            localStorage.setItem("recruitai_msg_version", "2");
+            localStorage.setItem("hiro_msg_version", "2");
             window.location.reload();
         }
     }, []);
@@ -109,7 +109,7 @@ export function ChatContainer({
             new DefaultChatTransport({
                 api: `${API_BASE_URL}/api/chat`,
                 headers: () => ({
-                    "x-demo-password": sessionStorage.getItem("recruitai_demo_password") ?? "",
+                    "x-demo-password": sessionStorage.getItem("hiro_demo_password") ?? "",
                 }),
             }),
         [],

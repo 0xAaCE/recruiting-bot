@@ -1,23 +1,23 @@
-# RecruitAI
+# Hiro
 
-AI-powered chat assistant that helps recruiters screen candidates faster and more consistently.
+AI-powered chat-first ATS that helps recruiters screen candidates, manage pipelines, and make hiring decisions — all through conversation.
 
-Instead of reading every CV from top to bottom, the recruiter has a conversation with an intelligent assistant that evaluates candidates against a job description and produces structured evaluations.
+Instead of navigating dashboards and forms, the recruiter talks to Hiro, an intelligent assistant that evaluates candidates against a job description and produces structured evaluations.
 
 ## Overview
 
 This is a monorepo with:
 
-- [`apps/client`](./apps/client) — React + Vite frontend
-- [`apps/server`](./apps/server) — Express API server
-- [`packages/models`](./packages/models) — AI chat integration (OpenAI)
-- [`packages/errors`](./packages/errors) — Shared error types
-- [`packages/utils`](./packages/utils) — Shared utilities
+-   [`apps/client`](./apps/client) — React + Vite frontend
+-   [`apps/server`](./apps/server) — Express API server
+-   [`packages/models`](./packages/models) — AI chat integration (OpenAI)
+-   [`packages/errors`](./packages/errors) — Shared error types
+-   [`packages/utils`](./packages/utils) — Shared utilities
 
 ## Prerequisites
 
-- Node.js 20+
-- pnpm 10+
+-   Node.js 20+
+-   pnpm 10+
 
 ## Getting Started
 
@@ -28,6 +28,6 @@ pnpm dev
 
 ## Documentation
 
-- [Product Idea](./docs/IDEA.md)
-- [Technical Design](./docs/TECH_DESIGN.md)
-- [Task Breakdown](./docs/tasks/)
+-   [Product Idea](./docs/IDEA.md)
+-   [Technical Design](./docs/TECH_DESIGN.md)
+-   [Task Breakdown](./docs/tasks/)

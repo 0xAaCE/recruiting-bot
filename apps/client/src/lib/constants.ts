@@ -2,7 +2,7 @@
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
 /** Prefix for all localStorage keys */
-export const STORAGE_PREFIX = "recruitai_";
+export const STORAGE_PREFIX = "hiro_";
 
 /** localStorage schema version — bump to invalidate stale data on breaking changes */
 export const STORAGE_VERSION = 1;

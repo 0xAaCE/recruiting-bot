@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { GitMerge, MessageSquareText, UsersRound } from "lucide-react";
+import { BellOff, GitMerge, MessageSquareText } from "lucide-react";
 
 interface Feature {
     icon: LucideIcon;
@@ -10,21 +10,21 @@ interface Feature {
 const features: Feature[] = [
     {
         icon: MessageSquareText,
-        title: "Chat Is the Interface",
+        title: "Just Chat",
         description:
-            "No dashboards, no forms. Describe a role, upload CVs, schedule interviews, and extend offers — all through natural conversation.",
+            "No dashboards, no forms. Describe a role, upload CVs, compare candidates, and make decisions — all through natural conversation with Hiro.",
     },
     {
         icon: GitMerge,
         title: "End-to-End Pipeline",
         description:
-            "From screening to offer letter, every stage of hiring lives in one place. Evaluations, interview feedback, and decisions flow together automatically.",
+            "From first screen to offer letter, every stage lives in one place. Evaluations, feedback, and decisions flow together automatically.",
     },
     {
-        icon: UsersRound,
-        title: "Built for Teams",
+        icon: BellOff,
+        title: "No More 'Any Updates?'",
         description:
-            "Run multiple searches in parallel, collaborate across positions, and keep a shared history that persists across devices.",
+            "Hiring managers ask Hiro directly — candidates screened, pipeline progress, top contenders. No more pinging recruiters for status updates.",
     },
 ];
 
@@ -32,7 +32,7 @@ export function Features() {
     return (
         <section className="px-4 py-20 sm:px-6">
             <div className="mx-auto max-w-6xl">
-                <h2 className="text-center text-3xl font-bold text-slate-900">Features</h2>
+                <h2 className="text-center text-3xl font-bold text-slate-900">Why Hiro?</h2>
 
                 <div className="mt-14 grid gap-8 sm:grid-cols-3">
                     {features.map((feature) => (
