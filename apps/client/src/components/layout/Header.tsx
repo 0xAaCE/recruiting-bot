@@ -8,13 +8,16 @@ export function Header() {
                 <Link to="/" className="flex items-center gap-2 text-xl font-bold text-slate-900">
                     <BrainCircuit className="h-6 w-6 text-indigo-600" />
                     RecruitAI
+                    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                        Demo
+                    </span>
                 </Link>
 
                 <Link
                     to="/chat"
                     className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
                 >
-                    Try Demo
+                    Try Screening Demo
                 </Link>
             </div>
         </header>

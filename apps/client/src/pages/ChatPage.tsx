@@ -31,6 +31,9 @@ export function ChatPage() {
                 <div className="flex items-center gap-2">
                     <BrainCircuit className="h-5 w-5 text-indigo-600" />
                     <span className="text-base font-semibold text-slate-900">RecruitAI</span>
+                    <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium leading-none text-amber-700">
+                        Demo
+                    </span>
                 </div>
                 <button
                     onClick={handleNewSearch}

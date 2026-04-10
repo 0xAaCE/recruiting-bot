@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { BrainCircuit, ListChecks, Zap } from "lucide-react";
+import { GitMerge, MessageSquareText, UsersRound } from "lucide-react";
 
 interface Feature {
     icon: LucideIcon;
@@ -9,22 +9,22 @@ interface Feature {
 
 const features: Feature[] = [
     {
-        icon: BrainCircuit,
-        title: "AI-Powered Analysis",
+        icon: MessageSquareText,
+        title: "Chat Is the Interface",
         description:
-            "GPT-4o reads resumes, understands context, and evaluates candidates against your specific requirements.",
+            "No dashboards, no forms. Describe a role, upload CVs, schedule interviews, and extend offers — all through natural conversation.",
     },
     {
-        icon: ListChecks,
-        title: "Structured Evaluations",
+        icon: GitMerge,
+        title: "End-to-End Pipeline",
         description:
-            "Every candidate gets a scorecard with fit score, strengths, weaknesses, and a clear recommendation.",
+            "From screening to offer letter, every stage of hiring lives in one place. Evaluations, interview feedback, and decisions flow together automatically.",
     },
     {
-        icon: Zap,
-        title: "Instant Results",
+        icon: UsersRound,
+        title: "Built for Teams",
         description:
-            "Upload a CV and get a detailed evaluation in seconds. Screen multiple candidates in a single session.",
+            "Run multiple searches in parallel, collaborate across positions, and keep a shared history that persists across devices.",
     },
 ];
 

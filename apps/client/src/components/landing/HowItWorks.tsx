@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { BarChart3, ClipboardList, FileUp } from "lucide-react";
+import { FileSearch, MessageSquare, TrendingUp } from "lucide-react";
 
 interface Step {
     icon: LucideIcon;
@@ -9,22 +9,22 @@ interface Step {
 
 const steps: Step[] = [
     {
-        icon: ClipboardList,
-        title: "Describe the Job",
+        icon: MessageSquare,
+        title: "Start a Conversation",
         description:
-            "Paste, type, or upload the job description as a PDF. The AI will ask clarifying questions to understand your priorities.",
+            "Tell RecruitAI about the role you're hiring for. It asks the right questions to understand your requirements, team, and priorities.",
     },
     {
-        icon: FileUp,
-        title: "Upload CVs",
+        icon: FileSearch,
+        title: "Screen Candidates",
         description:
-            "Drop candidate resumes as PDFs. GPT-4o reads them natively — no manual data entry.",
+            "Upload resumes as PDFs. AI reads them natively and returns structured scorecards with fit scores, strengths, and clear recommendations.",
     },
     {
-        icon: BarChart3,
-        title: "Get Evaluations",
+        icon: TrendingUp,
+        title: "Hire with Confidence",
         description:
-            "Receive structured scorecards with fit scores, strengths, weaknesses, and recommendations.",
+            "Compare candidates side by side, track progress through your pipeline, and make data-driven hiring decisions — all in chat.",
     },
 ];
 
