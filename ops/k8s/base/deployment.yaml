@@ -6,7 +6,7 @@ metadata:
     labels:
         app: recruiting-bot-server
 spec:
-    replicas: 1
+    replicas: 0
     selector:
         matchLabels:
             app: recruiting-bot-server
